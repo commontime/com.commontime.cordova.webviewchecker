@@ -23,12 +23,13 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 {
     private final String ENABLE_MESSAGE = "Please enable Chrome to use this app.";
     private final String ENABLE_BTN_TXT = "Enable Chrome";
-    private final String UPDATE_MESSAGE = "Please update Chrome to use this app.";
+    private final String UPDATE_MESSAGE = "Your current version of Chrome is %s. Please update Chrome to %s or higher use this app.";
     private final String UPDATE_BTN_TXT = "Update Chrome";
 
     private boolean goneToStore = false;
     private boolean goneToAppSettings = false;
     private String packageName;
+    private String currentVersion;
     private String requiredVersion;
 
     @Override
@@ -44,6 +45,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         packageName = getIntent().getStringExtra(WebViewChecker.CHROME_PACKAGE_NAME_BUNDLE_KEY);
         requiredVersion = getIntent().getStringExtra(WebViewChecker.REQUIRED_VERSION_BUNDLE_KEY);
+        currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
 
         boolean isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
 
@@ -80,20 +82,25 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         LinearLayout ll = new LinearLayout(getApplicationContext());
 
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setGravity(Gravity.CENTER_HORIZONTAL);
+        ll.setGravity(Gravity.CENTER);
+        ll.setPadding(60,30,60,30);
 
-        TextView tv = new TextView(getApplicationContext());
+        TextView textView = new TextView(getApplicationContext());
 
-        tv.setText(ENABLE_MESSAGE);
+        textView.setText(ENABLE_MESSAGE);
+        textView.setTextSize(20);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        tv.setPadding(5,5,5,5);
-
-        RelativeLayout.LayoutParams lp_tv = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+        LinearLayout.LayoutParams lp_tv = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        tv.setLayoutParams(lp_tv);
+        lp_tv.setMargins(0,0,0,50);
+
+        textView.setLayoutParams(lp_tv);
+
+        ll.addView(textView);
 
         Button button = new Button(getApplicationContext());
 
@@ -106,14 +113,13 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
             }
         });
 
-        RelativeLayout.LayoutParams lp_button = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+        LinearLayout.LayoutParams lp_button = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
         button.setLayoutParams(lp_button);
 
-        ll.addView(tv);
         ll.addView(button);
 
         return ll;
@@ -124,22 +130,25 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         LinearLayout ll = new LinearLayout(this);
 
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setGravity(Gravity.CENTER_HORIZONTAL);
+        ll.setGravity(Gravity.CENTER);
+        ll.setPadding(60,30,60,30);
 
-        TextView tv = new TextView(getApplicationContext());
+        TextView textView = new TextView(getApplicationContext());
 
-        tv.setText(UPDATE_MESSAGE);
+        textView.setText(String.format(UPDATE_MESSAGE, currentVersion, requiredVersion));
+        textView.setTextSize(20);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
 
         LinearLayout.LayoutParams lp_tv = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        lp_tv.setMargins(10,10,10,10);
+        lp_tv.setMargins(0,0,0,50);
 
-        tv.setLayoutParams(lp_tv);
+        textView.setLayoutParams(lp_tv);
 
-        ll.addView(tv);
+        ll.addView(textView);
 
         Button button = new Button(this);
 
