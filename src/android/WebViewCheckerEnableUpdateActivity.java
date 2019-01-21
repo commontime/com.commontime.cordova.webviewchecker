@@ -20,8 +20,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.commontime.testbed.MainActivity;
-
 public class WebViewCheckerEnableUpdateActivity extends Activity
 {
     private final String ENABLE_MESSAGE = "Please enable Chrome to use this app.";
@@ -215,11 +213,11 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
     private void restartApp()
     {
-        Intent mStartActivity = new Intent(this, MainActivity.class);
+        Intent mStartActivity = getPackageManager().getLaunchIntentForPackage(getPackageName());
         int mPendingIntentId = 123456;
         PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 50, mPendingIntent);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
         finish();
     }
 }
