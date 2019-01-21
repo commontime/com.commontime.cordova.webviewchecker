@@ -31,6 +31,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
     private String packageName;
     private String currentVersion;
     private String requiredVersion;
+    private boolean isWebViewEnabled;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -47,9 +48,16 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         packageName = getIntent().getStringExtra(WebViewChecker.CHROME_PACKAGE_NAME_BUNDLE_KEY);
         requiredVersion = getIntent().getStringExtra(WebViewChecker.REQUIRED_VERSION_BUNDLE_KEY);
         currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
+        isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
 
-        boolean isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
+        setUi();
 
+        setResult(1);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void setUi()
+    {
         if (!isWebViewEnabled)
         {
             setContentView(enableView());
@@ -66,8 +74,6 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
                 setContentView(updateView());
             }
         }
-
-        setResult(1);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -78,12 +84,10 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         if (!checkVersionOnResume) return;
 
-        String currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
-        int versionCompareResult = WebViewCheckerUtil.compareVersions(currentVersion, requiredVersion);
-        if (versionCompareResult == 1)
-        {
-            restartApp();
-        }
+        currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
+        isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
+
+        setUi();
 
         checkVersionOnResume = false;
     }
@@ -203,11 +207,9 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
     private void openChromeSettingsPage()
     {
-        Context context = getApplicationContext();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("package", packageName, null));
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-
-        context.startActivity(intent);
+        startActivity(intent);
         checkVersionOnResume = true;
     }
 
