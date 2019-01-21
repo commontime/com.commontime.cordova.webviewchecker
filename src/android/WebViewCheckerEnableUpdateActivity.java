@@ -2,6 +2,8 @@ package com.commontime.plugin;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,8 +18,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.commontime.testbed.MainActivity;
 
 public class WebViewCheckerEnableUpdateActivity extends Activity
 {
@@ -26,12 +29,12 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
     private final String UPDATE_MESSAGE = "Your current version of Chrome is %s. Please update Chrome to %s or higher use this app.";
     private final String UPDATE_BTN_TXT = "Update Chrome";
 
-    private boolean goneToStore = false;
-    private boolean goneToAppSettings = false;
+    private boolean checkVersionOnResume = false;
     private String packageName;
     private String currentVersion;
     private String requiredVersion;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -55,7 +58,15 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         }
         else
         {
-            setContentView(updateView());
+            int versionCompareResult = WebViewCheckerUtil.compareVersions(currentVersion, requiredVersion);
+            if (versionCompareResult == 1)
+            {
+                restartApp();
+            }
+            else
+            {
+                setContentView(updateView());
+            }
         }
 
         setResult(1);
@@ -67,14 +78,16 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
     {
         super.onResume();
 
-        if (!goneToAppSettings && !goneToStore) return;
+        if (!checkVersionOnResume) return;
 
         String currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
         int versionCompareResult = WebViewCheckerUtil.compareVersions(currentVersion, requiredVersion);
         if (versionCompareResult == 1)
         {
-            System.exit(0);
+            restartApp();
         }
+
+        checkVersionOnResume = false;
     }
 
     private View enableView()
@@ -181,12 +194,13 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         try
         {
             context.startActivity(intent);
+            checkVersionOnResume = true;
         }
         catch (Exception e)
         {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+            checkVersionOnResume = true;
         }
-        goneToStore = true;
     }
 
     private void openChromeSettingsPage()
@@ -194,14 +208,18 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         Context context = getApplicationContext();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("package", packageName, null));
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        try
-        {
-            context.startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        goneToAppSettings = true;
+
+        context.startActivity(intent);
+        checkVersionOnResume = true;
+    }
+
+    private void restartApp()
+    {
+        Intent mStartActivity = new Intent(this, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 50, mPendingIntent);
+        finish();
     }
 }
