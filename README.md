@@ -1,2 +1,2 @@
-# thumbnail-plugin
-Thumbnail plugin for iOS and Android.
+# webview-checker-plugin
+WebView checker plugin for Android.
