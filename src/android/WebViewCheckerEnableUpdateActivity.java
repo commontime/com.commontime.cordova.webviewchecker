@@ -22,13 +22,14 @@ import android.widget.TextView;
 
 public class WebViewCheckerEnableUpdateActivity extends Activity
 {
-    private final String ENABLE_MESSAGE = "Please enable Chrome to use this app.";
-    private final String ENABLE_BTN_TXT = "Enable Chrome";
-    private final String UPDATE_MESSAGE = "Your current version of Chrome is %s. Please update Chrome to %s or higher use this app.";
-    private final String UPDATE_BTN_TXT = "Update Chrome";
+    private final String ENABLE_MESSAGE = "Please enable %s to use this app.";
+    private final String ENABLE_BTN_TXT = "Enable %s";
+    private final String UPDATE_MESSAGE = "Your current version of %s is %s. Please update %s to %s or higher use this app.";
+    private final String UPDATE_BTN_TXT = "Update %s";
 
     private boolean checkVersionOnResume = false;
     private String packageName;
+    private String packageLabel;
     private String currentVersion;
     private String requiredVersion;
     private boolean isWebViewEnabled;
@@ -45,10 +46,12 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
         actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         actionBar.setDisplayHomeAsUpEnabled(false);
 
-        packageName = getIntent().getStringExtra(WebViewChecker.CHROME_PACKAGE_NAME_BUNDLE_KEY);
+        packageName = getIntent().getStringExtra(WebViewChecker.PACKAGE_NAME_BUNDLE_KEY);
+        packageLabel = WebViewCheckerUtil.getPackageLabel(getPackageManager(), packageName);
+        if (packageLabel == null) packageLabel = "Android System WebView";
         requiredVersion = getIntent().getStringExtra(WebViewChecker.REQUIRED_VERSION_BUNDLE_KEY);
-        currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
-        isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
+        currentVersion = WebViewCheckerUtil.getPackageVersion(getPackageManager(), packageName);
+        isWebViewEnabled = WebViewCheckerUtil.isPackageEnabled(getPackageManager(), packageName);
 
         setUi();
 
@@ -84,8 +87,8 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         if (!checkVersionOnResume) return;
 
-        currentVersion = WebViewCheckerUtil.getWebViewVersion(getPackageManager(), packageName);
-        isWebViewEnabled = WebViewCheckerUtil.isWebViewEnabled(getPackageManager(), packageName);
+        currentVersion = WebViewCheckerUtil.getPackageVersion(getPackageManager(), packageName);
+        isWebViewEnabled = WebViewCheckerUtil.isPackageEnabled(getPackageManager(), packageName);
 
         setUi();
 
@@ -102,7 +105,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         TextView textView = new TextView(getApplicationContext());
 
-        textView.setText(ENABLE_MESSAGE);
+        textView.setText(String.format(ENABLE_MESSAGE, packageLabel));
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -119,7 +122,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         Button button = new Button(getApplicationContext());
 
-        button.setText(ENABLE_BTN_TXT);
+        button.setText(String.format(ENABLE_BTN_TXT, packageLabel));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +153,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         TextView textView = new TextView(getApplicationContext());
 
-        textView.setText(String.format(UPDATE_MESSAGE, currentVersion, requiredVersion));
+        textView.setText(String.format(UPDATE_MESSAGE, packageLabel, currentVersion, packageLabel, requiredVersion));
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -167,7 +170,7 @@ public class WebViewCheckerEnableUpdateActivity extends Activity
 
         Button button = new Button(this);
 
-        button.setText(UPDATE_BTN_TXT);
+        button.setText(String.format(UPDATE_BTN_TXT, packageLabel));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,13 +1,16 @@
 package com.commontime.plugin;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import java.util.List;
+
 public class WebViewCheckerUtil {
 
-    public static String getWebViewVersion(PackageManager pm, String packageName)
+    public static String getPackageVersion(PackageManager pm, String packageName)
     {
         try
         {
@@ -21,7 +24,31 @@ public class WebViewCheckerUtil {
         }
     }
 
-    public static boolean isWebViewEnabled(PackageManager pm, String packageName)
+    public static boolean isPackageInstalled(PackageManager pm, String packageName)
+    {
+        List<ApplicationInfo> packages;
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if(packageInfo.packageName.equals(packageName))
+                return true;
+        }
+        return false;
+    }
+
+    public static String getPackageLabel(PackageManager pm, String packageName)
+    {
+        try
+        {
+            return pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString();
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static boolean isPackageEnabled(PackageManager pm, String packageName)
     {
         try
         {
