@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="com.commontime.cordova.webviewchecker"
-        version="1.1.0">
+        version="1.1.1">
 
   <name>WebViewChecker</name>
 
@@ -13,16 +13,16 @@
 
   <platform name="android">
 
-    <edit-config target="res/xml/config.xml" parent="/*">
+    <config-file target="res/xml/config.xml" parent="/*">
       <feature name="WebViewChecker">
         <param name="android-package" value="com.commontime.plugin.WebViewChecker"/>
         <param name="onload" value="true" />
       </feature>
-    </edit-config>
+    </config-file>
 
     <preference name="REQUIREDVERSION" default="1.0.0" />
 
-    <edit-config target="AndroidManifest.xml" parent="/manifest/application"> 
+    <edit-config target="AndroidManifest.xml" parent="/manifest/application" mode="merge"> 
 
     	<activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize">
     	</activity>
