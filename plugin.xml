@@ -13,16 +13,16 @@
 
   <platform name="android">
 
-    <config-file target="res/xml/config.xml" parent="/*">
+    <edit-config target="res/xml/config.xml" mode="merge">
       <feature name="WebViewChecker">
         <param name="android-package" value="com.commontime.plugin.WebViewChecker"/>
         <param name="onload" value="true" />
       </feature>
-    </config-file>
+    </edit-config>
 
     <preference name="REQUIREDVERSION" default="1.0.0" />
 
-    <edit-config target="AndroidManifest.xml" parent="/manifest/application" mode="merge"> 
+    <edit-config target="AndroidManifest.xml" mode="merge"> 
 
     	<activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize">
     	</activity>
