@@ -1,6 +1,6 @@
 {
   "name": "com.commontime.cordova.webviewchecker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Commontime cordova webviewchecker plugin.",
   "cordova": {
     "id": "com.commontime.cordova.webviewchecker",
