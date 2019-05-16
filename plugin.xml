@@ -13,23 +13,23 @@
 
   <platform name="android">
 
-    <config-file target="res/xml/config.xml" parent="/*">
+    <edit-config target="res/xml/config.xml" parent="/*">
       <feature name="WebViewChecker">
         <param name="android-package" value="com.commontime.plugin.WebViewChecker"/>
         <param name="onload" value="true" />
       </feature>
-    </config-file>
+    </edit-config>
 
     <preference name="REQUIREDVERSION" default="1.0.0" />
 
-    <config-file target="AndroidManifest.xml" parent="/manifest/application"> 
+    <edit-config target="AndroidManifest.xml" parent="/manifest/application"> 
 
     	<activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize">
     	</activity>
 
       <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION" />
             
-    </config-file>
+    </edit-config>
 
     <source-file src="src/android/WebViewChecker.java" target-dir="src/com/commontime/plugin/"/>
     <source-file src="src/android/WebViewCheckerEnableUpdateActivity.java" target-dir="src/com/commontime/plugin/"/>
