@@ -20,17 +20,6 @@
       </feature>
     </config-file>
 
-    <preference name="REQUIREDVERSION" default="1.0.0" />
-
-    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge"> 
-
-    	<activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize">
-    	</activity>
-
-      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION" />
-            
-    </edit-config>
-
     <source-file src="src/android/WebViewChecker.java" target-dir="src/com/commontime/plugin/"/>
     <source-file src="src/android/WebViewCheckerEnableUpdateActivity.java" target-dir="src/com/commontime/plugin/"/>
     <source-file src="src/android/WebViewCheckerUtil.java" target-dir="src/com/commontime/plugin/"/>
